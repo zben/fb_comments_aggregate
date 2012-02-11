@@ -1,0 +1,8 @@
+-@friends.each do |friend|
+  %p=friend["name"]
+-@posts.each do |post|
+  %p=post["name"] || post["story"]
+=@top_commenters.to_json
+/-@top_commenters.each do |person|
+/  %h4=person[0]["name"]
+/  %p=person[1]
