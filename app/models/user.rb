@@ -1,6 +1,6 @@
 class User
-  attr_accessor :uid, :graph
-
+  attr_accessor :uid, :graph, :friend_feed
+  
   def initialize(graph, uid)
     @graph = graph
     @uid = uid
@@ -19,14 +19,21 @@ class User
 
   end
   
+  def profile_picture_url uid
+    @graph.get_picture(uid,{:type=>"large"}) 
+  end
   
-  def friend_feed friend_uid, count=10 
-    @friend_feed ||= @graph.get_connections(friend_uid,'posts',{:limit=>count})
+  def user_info uid
+    @graph.get_object(uid)
+  end
+  
+  def friend_feed friend_uid, count=100 
+    @friend_feed = @graph.get_connections(friend_uid,'feed',{:limit=>count.to_s})
   end
   
   def friend_commenter_summary friend_uid
     
-    comments = friend_feed(friend_uid,100).
+    comments = @friend_feed.
                 map{|x| x["comments"]}.
                 select{|x| x.has_key?("data")}.
                 map{|x| x["data"].
@@ -35,7 +42,7 @@ class User
     if comments == 0
       []
     else
-      comments = comments.group_by{|x| x}.map{|a,b| [a,b.length]}
+      comments = comments.group_by{|x| x}.map{|a,b| [a,b.length]}.sort{|a,b| b[1]<=>a[1]}
     end
   end
 end

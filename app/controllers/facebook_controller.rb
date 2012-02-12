@@ -8,9 +8,11 @@ class FacebookController < ApplicationController
   def index
     uid = (params[:as_values_uid] ? params[:as_values_uid].split(',')[0] : params[:uid]) || current_user.uid
     #@likes_by_category = current_user.likes_by_category
-    @posts = current_user.friend_feed uid
-    @top_commenters = current_user.friend_commenter_summary uid
+    @posts = current_user.friend_feed(uid)[0..25]
+    @top_commenters = current_user.friend_commenter_summary(uid)[0..5]
     @friends = current_user.friends
+    @profile_picture_url = current_user.profile_picture_url uid
+    @user_info = current_user.user_info uid
   end
 
   def login

@@ -1,23 +1,33 @@
 .row
-  .span6
+  .span5
+    %h4=@user_info["name"]
+    =image_tag @profile_picture_url
+
     %h4 Top Commenters
-    -@top_commenters.each do |person|
-      .row
-        .span2 
-          %h4=link_to person[0]["name"],user_path(person[0]["id"])
-        .span1 
-          %h4=person[1]
-  .span10
+    -unless @top_commenters.empty?
+      -@top_commenters.each do |person|
+        .row
+          .span4 
+            %h4=link_to person[0]["name"],user_path(person[0]["id"])
+          .span1 
+            %h4=person[1]
+    -else
+      not available
+  .span11
     %h4 Wall Feed
-    %ul
-      -@posts.each do |post|
-        %li
-          =post["name"] || post["story"]
-          -if post["comments"].has_key?("data")
-            %ul
-              -post["comments"]["data"].each do |comment|
-                %li
-                  =comment["message"]
-                  =link_to comment["from"]["name"],user_path(comment["from"]["id"])  
+    -unless @posts.empty?   
+      %ul
+        -@posts.each do |post|
+          %li
+            =link_to post["from"]["name"],user_path(post["from"]["id"])  
+            =post["name"] || post["story"] || post["message"]
+            -if post["comments"].has_key?("data")
+              %ul
+                -post["comments"]["data"].each do |comment|
+                  %li
+                    =link_to comment["from"]["name"],user_path(comment["from"]["id"])  
+                    =comment["message"]
+    -else
+      This user has no wall posts or has limited public access to his wall posts.
   
 
