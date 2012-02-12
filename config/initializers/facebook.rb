@@ -1,6 +1,9 @@
-if Rails.env.development?
+if !Rails.env.production?
   facebook_settings = YAML.load_file(Rails.root.join('config', 'facebook.yml'))[Rails.env]
   FACEBOOK_APP_ID = facebook_settings['app_id']
   FACEBOOK_SECRET_KEY = facebook_settings['secret_key']
-end
+else
+  FACEBOOK_APP_ID = ENV['FACEBOOK_APP_ID']
+  FACEBOOK_SECRET_KEY = ENV['FACEBOOK_SECRET_KEY']
+end 
 
