@@ -32,7 +32,7 @@ gem 'rails', '3.0.3'
 gem 'haml'
 gem 'haml-rails'
 gem 'koala'
-
+gem 'rdiscount'
 group :development, :test do
   gem 'rspec'
   gem 'rspec-rails'

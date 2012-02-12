@@ -5,17 +5,25 @@ class FacebookController < ApplicationController
 
   helper_method :logged_in?, :current_user
   
+
+
+  def home
+    redirect_to user_path(current_user.uid)
+  end
+    
   def index
     uid = (params[:as_values_uid] ? params[:as_values_uid].split(',')[0] : params[:uid]) || current_user.uid
-    #@likes_by_category = current_user.likes_by_category
+
     @posts = current_user.friend_feed(uid)[0..25]
     @top_commenters = current_user.friend_commenter_summary(uid)[0..5]
-    @friends = current_user.friends
+    @friends = (session["friends"] ||= current_user.friends)
     @profile_picture_url = current_user.profile_picture_url uid
     @user_info = current_user.user_info uid
+    
   end
 
   def login
+    @text = RDiscount.new(File.read('readme.md')).to_html
   end
 
   protected

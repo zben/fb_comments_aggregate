@@ -2,8 +2,8 @@ FbBase::Application.routes.draw do
   
 
   match 'facebook/:action' => 'facebook', :as => :facebook
-  root :to => 'facebook#index'
   match ':uid' => 'facebook#index', :as=>:user
+  root :to => 'facebook#home'
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
