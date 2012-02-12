@@ -38,3 +38,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'ruby-debug'
 end
+
+group :production do
+  gem 'heroku'
+end
