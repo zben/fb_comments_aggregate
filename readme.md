@@ -1,7 +1,7 @@
 ### What the app does
 This app lets user log in by facebook and pick any of their friends to see their wall posts and see the most frequent commenters. 
 
-demo: http://wildfireben.heroku.com
+**demo:** http://wildfireben.heroku.com
 
 ### Design approach
 ####Layout 
