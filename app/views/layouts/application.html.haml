@@ -8,20 +8,20 @@
 
   %body
     #header
-      = facebook_login_button('large')
+/      = facebook_login_button('large')
       %h1 WildFire Programming Challenge
     #content
       #fb-root
       = yield
 
 :javascript
-  window.fbAsyncInit = function() {
-    FB.init({appId: #{FACEBOOK_APP_ID}, status: true, cookie: true, xfbml: true});
-  };
-  (function() {
-    var e = document.createElement('script');
-    e.type = 'text/javascript';
-    e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-    e.async = true;
-    document.getElementById('fb-root').appendChild(e);
-  }());
+/  window.fbAsyncInit = function() {
+/    FB.init({appId: #{FACEBOOK_APP_ID}, status: true, cookie: true, xfbml: true});
+/  };
+/  (function() {
+/    var e = document.createElement('script');
+/    e.type = 'text/javascript';
+/    e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+/    e.async = true;
+/    document.getElementById('fb-root').appendChild(e);
+/  }());
