@@ -6,7 +6,7 @@ class FacebookController < ApplicationController
   helper_method :logged_in?, :current_user
   
   def index
-    uid = params[:uid] || current_user.uid
+    uid = (params[:as_values_uid] ? params[:as_values_uid].split(',')[0] : params[:uid]) || current_user.uid
     #@likes_by_category = current_user.likes_by_category
     @posts = current_user.friend_feed uid
     @top_commenters = current_user.friend_commenter_summary uid

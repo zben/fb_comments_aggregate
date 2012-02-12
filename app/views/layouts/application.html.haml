@@ -2,17 +2,22 @@
 %html
   %head
     %title Wildfire Programming Challenge
-    = stylesheet_link_tag 'application'
-    = javascript_include_tag 'jquery'
+    = stylesheet_link_tag 'application','autoSuggest','bootstrap'
+    = javascript_include_tag 'jquery','jquery.autoSuggest'
     = csrf_meta_tag
 
   %body
-    #header
-      = facebook_login_button('large')
-      %h1 WildFire Programming Challenge
-    #content
-      #fb-root
-      = yield
+    .container.main
+      #header
+        .row
+          .span4
+            %h3=link_to "WildFire Challenge",root_path  
+          .span8=render 'facebook/name_picker'
+          .span4=facebook_login_button('large')
+        
+      #content
+        #fb-root
+        = yield
 
 :javascript
   window.fbAsyncInit = function() {

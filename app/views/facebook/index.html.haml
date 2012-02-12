@@ -1,8 +1,23 @@
--@friends.each do |friend|
-  %p=friend["name"]
--@posts.each do |post|
-  %p=post["name"] || post["story"]
-=@top_commenters.to_json
-/-@top_commenters.each do |person|
-/  %h4=person[0]["name"]
-/  %p=person[1]
+.row
+  .span6
+    %h4 Top Commenters
+    -@top_commenters.each do |person|
+      .row
+        .span2 
+          %h4=link_to person[0]["name"],user_path(person[0]["id"])
+        .span1 
+          %h4=person[1]
+  .span10
+    %h4 Wall Feed
+    %ul
+      -@posts.each do |post|
+        %li
+          =post["name"] || post["story"]
+          -if post["comments"].has_key?("data")
+            %ul
+              -post["comments"]["data"].each do |comment|
+                %li
+                  =comment["message"]
+                  =link_to comment["from"]["name"],user_path(comment["from"]["id"])  
+  
+

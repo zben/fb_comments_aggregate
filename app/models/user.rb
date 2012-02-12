@@ -15,7 +15,8 @@ class User
   end
   
   def friends
-    @friends ||= graph.get_connections(uid,'friends')
+    @friends ||= graph.get_connections(uid,'friends').map{|x| {:value=>x["id"], :name=> x["name"]}}
+
   end
   
   
