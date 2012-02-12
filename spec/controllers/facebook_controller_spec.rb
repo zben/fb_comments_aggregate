@@ -18,8 +18,7 @@ describe FacebookController do
         User.should_receive(:new).and_return(@user)
         @likes = mock('likes')
         @user.should_receive(:likes_by_category).and_return(@likes)
-
-        get :index
+        get :index,{:uid=>"100044"}
       end
 
       it do
