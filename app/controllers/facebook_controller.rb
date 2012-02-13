@@ -15,7 +15,7 @@ class FacebookController < ApplicationController
     @top_commenters = current_user.friend_commenter_summary(uid)[0..5]
     @friends = current_user.friends
     @profile_picture_url = current_user.profile_picture_url uid
-    @user_info = current_user.user_info uid
+    @user_info = current_user.user_info uid 
     
   end
 
@@ -46,9 +46,7 @@ class FacebookController < ApplicationController
       
       if fb_user_info = @oauth.get_user_info_from_cookie(request.cookies)
         @graph = Koala::Facebook::GraphAPI.new(fb_user_info['access_token'])
-        logger.info fb_user_info['access_token']
         @user = User.new(@graph, fb_user_info['user_id'])
-        logger.info fb_user_info['user_id']
       end
     end
 end

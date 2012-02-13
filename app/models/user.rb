@@ -28,7 +28,7 @@ class User
   end
   
   def friend_feed friend_uid, count=100 
-    @friend_feed = @graph.get_connections(friend_uid,'feed',{:limit=>count.to_s})
+    @friend_feed ||= @graph.get_connections(friend_uid,'feed',{:limit=>count.to_s})
   end
   
   def friend_commenter_summary friend_uid

@@ -5,96 +5,115 @@ describe User do
     @graph = mock('graph api')
     @uid = 42
     @user = User.new(@graph, @uid)
+    
   end
 
-#  describe 'retrieving likes' do
-#    before do
-#      @likes = [
-#        {
-#          "name" => "The Office",
-#          "category" => "Tv show",
-#          "id" => "6092929747",
-#          "created_time" => "2010-05-02T14:07:10+0000"
-#        },
-#        {
-#          "name" => "Flight of the Conchords",
-#          "category" => "Tv show",
-#          "id" => "7585969235",
-#          "created_time" => "2010-08-22T06:33:56+0000"
-#        },
-#        {
-#          "name" => "Wildfire Interactive, Inc.",
-#          "category" => "Product/service",
-#          "id" => "36245452776",
-#          "created_time" => "2010-06-03T18:35:54+0000"
-#        },
-#        {
-#          "name" => "Facebook Platform",
-#          "category" => "Product/service",
-#          "id" => "19292868552",
-#          "created_time" => "2010-05-02T14:07:10+0000"
-#        },
-#        {
-#          "name" => "Twitter",
-#          "category" => "Product/service",
-#          "id" => "20865246992",
-#          "created_time" => "2010-05-02T14:07:10+0000"
-#        }
-#      ]
-#      @graph.should_receive(:get_connections).with(@uid, 'likes').once.and_return(@likes)
-#    end
+  describe 'retrieving friends' do
+    before do
+      @friends = [
+        {
+          "name" => "Ben Zhang",
+          "id" => "6092929747",
+        },
+        {
+          "name" => "James Bond",
+          "id" => "7585969235",
+        }
+      ]
+      @results = [
+        {
+          :name => "Ben Zhang",
+          :value => "6092929747",
+        },
+        {
+          :name => "James Bond",
+          :value => "7585969235",
+        }
+      ]
+      @graph.should_receive(:get_connections).with(@uid, 'friends').once.and_return(@friends)
+    end
 
-#    describe '#likes' do
-#      it 'should retrieve the likes via the graph api' do
-#        @user.likes.should == @likes
-#      end
+    describe '#friends' do
+      it 'should retrieve the friends via the graph api' do
+        @user.friends.should == @results
+      end
 
-#      it 'should memoize the result after the first call' do
-#        likes1 = @user.likes
-#        likes2 = @user.likes
-#        likes2.should equal(likes1)
-#      end
-#    end
+      it 'should memoize the result after the first call' do
+        friends1 = @user.friends
+        friends2 = @user.friends
+        friends2.should equal(friends1)
+      end
+    end
+  end
+  
+  describe 'retrieving feeds' do
+    before do
+      @feeds = [ 
+        {"comments"=>{
+            "data"=>[
+              {"from"=>{"name"=>"Ben Zhang", "id"=>"4102710"}, "id"=>"82", "message"=>"commenti"}, 
+              {"from"=>{"name"=>"Tim Garvey", "id"=>"700184770"}, "id"=>"410", "message"=>"what is that?"}
+            ], 
+         "count"=>2}, 
+         "type"=>"status", 
+         "message"=>"Ben is doing a code challenge"},  
+       {"comments"=>{"count"=>0}, "type"=>"status","message"=>"Another example"},  
+       {"comments"=>{
+            "data"=>[
+              {"from"=>{"name"=>"Ben Zhang", "id"=>"4102710"}, "id"=>"82", "message"=>"commenti"}, 
+            ], 
+         "count"=>1}, 
+         "type"=>"status", 
+         "message"=>"Ben is doing a code challenge"},
+      ]
+      @graph.should_receive(:get_connections).with("12345", "feed", {:limit=>"100"}).and_return(@feeds)
+    end
 
-#    describe '#likes_by_category' do
-#      it 'should group by category and sort categories and names' do
-#        @user.likes_by_category.should == [
-#          ["Product/service", [
-#            {
-#              "name" => "Facebook Platform",
-#              "category" => "Product/service",
-#              "id" => "19292868552",
-#              "created_time" => "2010-05-02T14:07:10+0000"
-#            },
-#            {
-#              "name" => "Twitter",
-#              "category" => "Product/service",
-#              "id" => "20865246992",
-#              "created_time" => "2010-05-02T14:07:10+0000"
-#            },
-#            {
-#              "name" => "Wildfire Interactive, Inc.",
-#              "category" => "Product/service",
-#              "id" => "36245452776",
-#              "created_time" => "2010-06-03T18:35:54+0000"
-#            }
-#          ]],
-#          ["Tv show", [
-#            {
-#              "name" => "Flight of the Conchords",
-#              "category" => "Tv show",
-#              "id" => "7585969235",
-#              "created_time" => "2010-08-22T06:33:56+0000"
-#            },
-#            {
-#              "name" => "The Office",
-#              "category" => "Tv show",
-#              "id" => "6092929747",
-#              "created_time" => "2010-05-02T14:07:10+0000"
-#            }
-#          ]]
-#        ]
-#      end
-#    end
-#  end
+    describe '#friend_commenter_summary friend_uid' do
+      it 'should retrieve the likes via the graph api' do
+        @user.friend_feed('12345',100).count.should == @feeds.count
+      end
+
+      it 'should memoize the result after the first call' do
+        feeds1 = @user.friend_feed('12345',100)
+        feeds2 = @user.friend_feed('12345',100)
+        feeds2.should equal(feeds1)
+      end
+    end
+  end
+  
+  describe 'get top commenters' do
+    before do
+      @friend_feed = [ 
+        {"comments"=>{
+            "data"=>[
+              {"from"=>{"name"=>"Ben Zhang", "id"=>"4102710"}, "id"=>"82", "message"=>"commenti"}, 
+              {"from"=>{"name"=>"Tim Garvey", "id"=>"700184770"}, "id"=>"410", "message"=>"what is that?"}
+            ], 
+         "count"=>2}, 
+         "type"=>"status", 
+         "message"=>"Ben is doing a code challenge"},  
+       {"comments"=>{"count"=>0}, "type"=>"status","message"=>"Another example"},  
+       {"comments"=>{
+            "data"=>[
+              {"from"=>{"name"=>"Ben Zhang", "id"=>"4102710"}, "id"=>"82", "message"=>"commenti"}, 
+            ], 
+         "count"=>1}, 
+         "type"=>"status", 
+         "message"=>"Ben is doing a code challenge"},
+      ]
+      @graph.should_receive(:get_connections).with('12345', 'feed',{:limit=>'100'}).and_return(@friend_feed)
+    end
+
+    describe '#top-commenters' do
+      it 'should gets summary of commentors ' do
+        @user.friend_feed('12345',100)
+        @user.friend_commenter_summary("12345").should == [[{"name"=>"Ben Zhang", "id"=>"4102710"}, 2],  [{"name"=>"Tim Garvey", "id"=>"700184770"}, 1]]
+      end
+
+    end
+  end
+  
+
+  
 end
